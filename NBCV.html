@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>腦哥 Podcast Web3 互動學習與決策工坊</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Custom Tailwind Config for Web3 Glow Aesthetic -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f5f7ff',
+              100: '#ebf0ff',
+              500: '#6366f1', // Indigo
+              600: '#4f46e5',
+              700: '#4338ca',
+            },
+            accent: {
+              400: '#34d399', // Emerald
+              500: '#10b981',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom Scrollbar for Sleek Web3 Look */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col selection:bg-brand-500/30 selection:text-white">
+
+  <!-- Header Section -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-accent-500 flex items-center justify-center shadow-lg shadow-brand-500/20">
+          <i data-lucide="radio" class="w-6 h-6 text-white animate-pulse"></i>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold tracking-tight bg-gradient-to-r from-white via-slate-200 to-brand-400 bg-clip-text text-transparent">
+            腦哥 Chill塊鏈 
+          </h1>
+          <p class="text-xs text-slate-400">Web3 互動學習與決策工坊</p>
+        </div>
+      </div>
+      
+      <div class="flex items-center space-x-4">
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+          2026 模擬沙盤
+        </span>
+        <a href="#quiz" onclick="switchTab('quiz')" class="text-xs text-brand-400 hover:text-brand-300 transition flex items-center gap-1 bg-brand-500/10 border border-brand-500/20 py-1.5 px-3 rounded-lg">
+          <i data-lucide="award" class="w-3.5 h-3.5"></i> 測驗你的投資流派
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Notification Banner -->
+  <div id="toast" class="hidden fixed bottom-5 right-5 z-50 bg-slate-900 border border-slate-700 text-slate-200 px-4 py-3 rounded-xl shadow-2xl max-w-sm flex items-start space-x-3 animate-bounce">
+    <div class="text-accent-400 mt-0.5"><i data-lucide="info" class="w-5 h-5"></i></div>
+    <div>
+      <p class="font-semibold text-sm" id="toast-title">提示</p>
+      <p class="text-xs text-slate-400 mt-0.5" id="toast-message">訊息內容</p>
+    </div>
+  </div>
+
+  <!-- Main Content Layout -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full flex flex-col lg:flex-row gap-8">
+    
+    <!-- Sidebar / Nav Options -->
+    <aside class="w-full lg:w-64 shrink-0 flex flex-col gap-2">
+      <div class="p-4 bg-slate-900/40 rounded-xl border border-slate-800/60 mb-2">
+        <p class="text-xs text-slate-400 uppercase font-semibold tracking-wider mb-2">專案索引</p>
+        <p class="text-sm text-slate-300 font-medium">基於 Dyson Finance 專訪 & 幣圈週報深度數據分析</p>
+      </div>
+      <nav class="flex flex-row lg:flex-col overflow-x-auto lg:overflow-x-visible gap-1.5 bg-slate-900/20 p-1 rounded-xl lg:bg-transparent lg:p-0">
+        <button onclick="switchTab('dashboard')" id="btn-dashboard" class="tab-btn w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition text-left shrink-0 lg:shrink bg-brand-600 text-white shadow-lg shadow-brand-600/15">
+          <i data-lucide="layout-dashboard" class="w-4 h-4"></i> 五維底部與戰略儲備
+        </button>
+        <button onclick="switchTab('simulator')" id="btn-simulator" class="tab-btn w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition text-left shrink-0 lg:shrink text-slate-400 hover:bg-slate-900/50 hover:text-slate-200">
+          <i data-lucide="sliders" class="w-4 h-4"></i> 雙幣與黑洞模擬器
+        </button>
+        <button onclick="switchTab('knowledge')" id="btn-knowledge" class="tab-btn w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition text-left shrink-0 lg:shrink text-slate-400 hover:bg-slate-900/50 hover:text-slate-200">
+          <i data-lucide="book-open" class="w-4 h-4"></i> 腦哥 Podcast 知識庫
+        </button>
+        <button onclick="switchTab('quiz')" id="btn-quiz" class="tab-btn w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition text-left shrink-0 lg:shrink text-slate-400 hover:bg-slate-900/50 hover:text-slate-200">
+          <i data-lucide="help-circle" class="w-4 h-4"></i> 賽局思維自我檢測
+        </button>
+      </nav>
+
+      <!-- Central Bank & Treasury Stats Card -->
+      <div class="hidden lg:block mt-6 p-4 bg-gradient-to-b from-slate-900 to-slate-950 rounded-2xl border border-slate-800 shadow-xl space-y-4">
+        <div class="flex items-center space-x-2 text-brand-400">
+          <i data-lucide="landmark" class="w-4 h-4"></i>
+          <span class="text-xs font-bold tracking-widest uppercase">總經關鍵數據</span>
+        </div>
+        <div class="space-y-2">
+          <div class="flex justify-between text-xs border-b border-slate-800/60 pb-1.5">
+            <span class="text-slate-400">台灣外匯存底</span>
+            <span class="text-slate-200 font-mono">$560,000M USD</span>
+          </div>
+          <div class="flex justify-between text-xs border-b border-slate-800/60 pb-1.5">
+            <span class="text-slate-400">美財政部 TGA 帳戶</span>
+            <span class="text-amber-400 font-mono">1.0 兆美元 (吸血效應)</span>
+          </div>
+          <div class="flex justify-between text-xs border-b border-slate-800/60 pb-1.5">
+            <span class="text-slate-400">穩定幣年交易量</span>
+            <span class="text-emerald-400 font-mono">7.2 兆美元 (超車 ACH)</span>
+          </div>
+          <div class="flex justify-between text-xs">
+            <span class="text-slate-400">全網實現價格</span>
+            <span class="text-slate-200 font-mono">$55,207 USD</span>
+          </div>
+        </div>
+        <div class="p-2.5 bg-slate-900/60 rounded-xl border border-slate-800/80">
+          <p class="text-[10px] text-slate-400 leading-relaxed italic">
+            「時空會改變... 未來將會是整體的金融環境與政策需求做調整。」<br>— 台灣央行行長 楊金龍
+          </p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow min-w-0">
+
+      <!-- TAB 1: DASHBOARD & BTC PREDICTORS -->
+      <section id="tab-dashboard" class="space-y-8">
+        
+        <!-- Welcome Banner -->
+        <div class="relative overflow-hidden bg-gradient-to-r from-slate-900 via-brand-950/20 to-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl">
+          <div class="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
+            <i data-lucide="trending-up" class="w-32 h-32 text-brand-400"></i>
+          </div>
+          <div class="max-w-2xl">
+            <span class="text-xs font-semibold text-brand-400 uppercase tracking-widest">沙盤模擬第一站</span>
+            <h2 class="text-2xl font-bold mt-1 text-white">比特幣底部預測與戰略儲備演算</h2>
+            <p class="text-sm text-slate-400 mt-2 leading-relaxed">
+              綜合「週報五維度分析」與「台灣比特幣戰略儲備智庫報告」，調整下方權重與分配比例，生成客製化的 Web3 理性建倉與主權防禦策略。
+            </p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+          
+          <!-- Widget 1: 五維底部預測儀 -->
+          <div class="bg-slate-900 rounded-2xl border border-slate-800 p-6 flex flex-col justify-between shadow-xl space-y-6">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="text-brand-400 text-xs font-bold tracking-wider uppercase">BTC Bottom Finder</span>
+                <h3 class="text-lg font-bold text-slate-100 flex items-center gap-1.5">
+                  <i data-lucide="calculator" class="w-5 h-5 text-brand-500"></i> 比特幣五維底部預測儀
+                </h3>
+              </div>
+              <span class="px-2 py-1 rounded bg-slate-800 text-[10px] text-slate-400 border border-slate-700">綜合歷史牛熊規律</span>
+            </div>
+
+            <!-- Parameters Sliders -->
+            <div class="space-y-4">
+              <div class="p-3 bg-slate-950/50 rounded-xl border border-slate-800/80">
+                <div class="flex justify-between text-xs mb-1.5">
+                  <span class="text-slate-300 font-medium">1. 宏觀週期權重 (歷史回撤 64% - 對標 $40,000)</span>
+                  <span id="weight-macro-val" class="text-brand-400 font-mono font-bold">50%</span>
+                </div>
+                <input type="range" id="weight-macro" min="0" max="100" value="50" oninput="calculateCustomBottom()" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-brand-500">
+              </div>
+
+              <div class="p-3 bg-slate-950/50 rounded-xl border border-slate-800/80">
+                <div class="flex justify-between text-xs mb-1.5">
+                  <span class="text-slate-300 font-medium">2. 礦工關機價權重 (典型成本 $52,000 - $58,000)</span>
+                  <span id="weight-miner-val" class="text-brand-400 font-mono font-bold">50%</span>
+                </div>
+                <input type="range" id="weight-miner" min="0" max="100" value="50" oninput="calculateCustomBottom()" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-brand-500">
+              </div>
+
+              <div class="p-3 bg-slate-950/50 rounded-xl border border-slate-800/80">
+                <div class="flex justify-between text-xs mb-1.5">
+                  <span class="text-slate-300 font-medium">3. 鏈上實現價格權重 (全網實現價 $55,207)</span>
+                  <span id="weight-onchain-val" class="text-brand-400 font-mono font-bold">50%</span>
+                </div>
+                <input type="range" id="weight-onchain" min="0" max="100" value="50" oninput="calculateCustomBottom()" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-brand-500">
+              </div>
+
+              <div class="p-3 bg-slate-950/50 rounded-xl border border-slate-800/80">
+                <div class="flex justify-between text-xs mb-1.5">
+                  <span class="text-slate-300 font-medium">4. 技術分析密集區權重 (VPVR鐵底 $52,000 - $58,000)</span>
+                  <span id="weight-ta-val" class="text-brand-400 font-mono font-bold">50%</span>
+                </div>
+                <input type="range" id="weight-ta" min="0" max="100" value="50" oninput="calculateCustomBottom()" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-brand-500">
+              </div>
+
+              <div class="p-3 bg-slate-950/50 rounded-xl border border-slate-800/80">
+                <div class="flex justify-between text-xs mb-1.5">
+                  <span class="text-slate-300 font-medium">5. 市場情緒權重 (FTX/Luna 級極度恐慌 - 估值 $62,500)</span>
+                  <span id="weight-sentiment-val" class="text-brand-400 font-mono font-bold font-mono">50%</span>
+                </div>
+                <input type="range" id="weight-sentiment" min="0" max="100" value="50" oninput="calculateCustomBottom()" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-brand-500">
+              </div>
+            </div>
+
+            <!-- Calculated Output -->
+            <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 text-center space-y-2">
+              <span class="text-slate-400 text-xs">您演算出的「比特幣最終價值底部」預估為</span>
+              <div class="text-3xl font-extrabold text-white font-mono" id="custom-bottom-price">$54,741 <span class="text-sm font-semibold text-slate-400">USD</span></div>
+              <p class="text-[11px] text-slate-400 leading-normal" id="custom-bottom-advice">
+                這屬於極高勝率建倉區間，歷史上 200 週移動平均線 (約 $58,000) 與實體礦工關機成本在此共振。
+              </p>
+            </div>
+
+            <!-- Dynamic DCA Blueprint Generator -->
+            <div class="space-y-3">
+              <span class="text-xs font-semibold text-slate-400 uppercase">依據此計算推薦的「金字塔式理性建倉法」：</span>
+              <div class="grid grid-cols-3 gap-3 text-center">
+                <div class="p-2 bg-brand-500/5 rounded-xl border border-brand-500/10">
+                  <span class="text-[10px] text-slate-400 block mb-0.5">1. 心理情緒底 (60-65K)</span>
+                  <span class="text-sm font-bold text-brand-400 block font-mono">20% - 30%</span>
+                  <span class="text-[9px] text-slate-500">分批試水溫</span>
+                </div>
+                <div class="p-2 bg-accent-500/5 rounded-xl border border-accent-500/10">
+                  <span class="text-[10px] text-slate-400 block mb-0.5">2. 價值共振底 (52-58K)</span>
+                  <span class="text-sm font-bold text-accent-400 block font-mono">40% - 50%</span>
+                  <span class="text-[9px] text-slate-500">主力資金重錘</span>
+                </div>
+                <div class="p-2 bg-amber-500/5 rounded-xl border border-amber-500/10">
+                  <span class="text-[10px] text-slate-400 block mb-0.5">3. 極端物理底 (40-52K)</span>
+                  <span class="text-sm font-bold text-amber-400 block font-mono">20% - 30%</span>
+                  <span class="text-[9px] text-slate-500">黑天鵝插針預備</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Widget 2: 台灣比特幣戰略儲備模擬器 -->
+          <div class="bg-slate-900 rounded-2xl border border-slate-800 p-6 flex flex-col justify-between shadow-xl space-y-6">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="text-accent-400 text-xs font-bold tracking-wider uppercase">Sovereign Reserve Simulation</span>
+                <h3 class="text-lg font-bold text-slate-100 flex items-center gap-1.5">
+                  <i data-lucide="globe" class="w-5 h-5 text-accent-500"></i> 台灣比特幣戰略儲備模擬器
+                </h3>
+              </div>
+              <span class="px-2 py-1 rounded bg-slate-800 text-[10px] text-slate-400 border border-slate-700">智庫地緣政治報告</span>
+            </div>
+
+            <!-- Parameters Sliders -->
+            <div class="space-y-4">
+              <div class="p-4 bg-slate-950/50 rounded-xl border border-slate-800/80">
+                <div class="flex justify-between text-xs mb-1.5">
+                  <span class="text-slate-300 font-medium">外匯存底撥出配置比例：</span>
+                  <span id="reserve-percent-val" class="text-accent-400 font-mono font-bold">1.5 %</span>
+                </div>
+                <input type="range" id="reserve-percent" min="0" max="5" step="0.5" value="1.5" oninput="calculateReserveImpact()" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-accent-500">
+                <p class="text-[10px] text-slate-500 mt-2 leading-relaxed">
+                  目前台灣外匯存底高達 80% 以上單一壓在「美債」上，存在顯著的單點失敗風險。報告推薦配置 1% 至 5% 比特幣降低曝險。
+                </p>
+              </div>
+
+              <!-- Output Box -->
+              <div class="grid grid-cols-2 gap-4">
+                <div class="p-3 bg-slate-950 rounded-xl border border-slate-800">
+                  <span class="text-[10px] text-slate-400 block">配置法幣金額</span>
+                  <span id="reserve-allocated-usd" class="text-lg font-bold text-white font-mono">$8.40 B <span class="text-xs text-slate-400">USD</span></span>
+                </div>
+                <div class="p-3 bg-slate-950 rounded-xl border border-slate-800">
+                  <span class="text-[10px] text-slate-400 block">可購入 BTC 數量</span>
+                  <span id="reserve-allocated-btc" class="text-lg font-bold text-accent-400 font-mono">140,000 <span class="text-xs text-slate-400">BTC</span></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sovereign Ranking Output -->
+            <div class="p-3.5 bg-slate-950 rounded-xl border border-slate-800">
+              <div class="flex items-center gap-2 mb-2">
+                <i data-lucide="flag" class="w-4 h-4 text-amber-500"></i>
+                <span class="text-xs font-semibold text-slate-300">主權國家持有排名預估：</span>
+              </div>
+              <p class="text-xs text-slate-400 leading-normal" id="reserve-rank-text">
+                若實現此配置，台灣將一躍成為全球最大的比特幣主權儲備持中國家之一，甚至直追美國聯邦政府現有儲備！
+              </p>
+            </div>
+
+            <!-- Scarcity & Safety Radar-like table -->
+            <div class="space-y-2">
+              <span class="text-xs font-semibold text-slate-400 uppercase">戰略儲備資產多維度特質對比：</span>
+              <div class="overflow-x-auto">
+                <table class="w-full text-[11px] text-left text-slate-400">
+                  <thead class="text-slate-300 border-b border-slate-800 uppercase">
+                    <tr>
+                      <th class="py-1">維度</th>
+                      <th class="py-1 text-accent-400">比特幣</th>
+                      <th class="py-1 text-yellow-500">黃金</th>
+                      <th class="py-1 text-blue-400">美國國債</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-800">
+                    <tr>
+                      <td class="py-1.5 font-medium text-slate-300">1. 稀缺性 (Scarcity)</td>
+                      <td class="py-1.5 text-accent-400 font-bold">絕對稀缺 (21M限制)</td>
+                      <td class="py-1.5 text-slate-300">每載2%產量通膨</td>
+                      <td class="py-1.5 text-slate-400">取決於Fed瘋狂印鈔</td>
+                    </tr>
+                    <tr>
+                      <td class="py-1.5 font-medium text-slate-300">2. 可運除性 (Portability)</td>
+                      <td class="py-1.5 text-accent-400 font-bold">極高 (私鑰帶走)</td>
+                      <td class="py-1.5 text-slate-300">極低 (海域封鎖運不走)</td>
+                      <td class="py-1.5 text-slate-400">中等 (電子帳戶需依賴SWIFT)</td>
+                    </tr>
+                    <tr>
+                      <td class="py-1.5 font-medium text-slate-300">3. 戰時安全性 (Security)</td>
+                      <td class="py-1.5 text-accent-400 font-bold">不被凍結 (去中心)</td>
+                      <td class="py-1.5 text-slate-300">海外儲備有被凍結風險</td>
+                      <td class="py-1.5 text-slate-400">完全聽命於他國外交政策</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Stablecoin ACH Comparison Visualizer Box -->
+        <div class="bg-slate-900 rounded-2xl border border-slate-800 p-6 shadow-xl">
+          <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
+            <div>
+              <span class="text-brand-400 text-xs font-bold tracking-wider uppercase">Traditional Finance Overtake</span>
+              <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                <i data-lucide="zap" class="w-5 h-5 text-amber-500"></i> 加密穩定幣超車傳統金融結算體系
+              </h3>
+              <p class="text-xs text-slate-400 mt-1">週報實時數據：2026 年初穩定幣交易量首度超越美國 ACH 自動結算系統與全球 VISA 網路。</p>
+            </div>
+            <div class="flex gap-2">
+              <span class="px-2.5 py-1 rounded bg-slate-950 text-xs text-slate-300 border border-slate-800 font-mono">穩定幣 7.2 兆美元</span>
+              <span class="px-2.5 py-1 rounded bg-slate-950 text-xs text-slate-300 border border-slate-800 font-mono">ACH 6.8 兆美元</span>
+              <span class="px-2.5 py-1 rounded bg-slate-950 text-xs text-slate-300 border border-slate-800 font-mono">VISA 1.2 兆美元</span>
+            </div>
+          </div>
+          
+          <div class="space-y-4">
+            <!-- Progress Bar 1: Stablecoins -->
+            <div class="space-y-1">
+              <div class="flex justify-between text-xs">
+                <span class="text-emerald-400 font-semibold flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> 全球加密穩定幣交易量 (USD)</span>
+                <span class="text-slate-300 font-mono">7.2 兆美元 (100%)</span>
+              </div>
+              <div class="w-full bg-slate-950 h-3 rounded-full overflow-hidden border border-slate-800">
+                <div class="bg-gradient-to-r from-emerald-500 to-accent-500 h-full rounded-full" style="width: 100%"></div>
+              </div>
+            </div>
+            <!-- Progress Bar 2: ACH -->
+            <div class="space-y-1">
+              <div class="flex justify-between text-xs">
+                <span class="text-slate-300 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-slate-500"></span> 美國 ACH 電子資金轉帳系統</span>
+                <span class="text-slate-400 font-mono">6.8 兆美元 (94.4%)</span>
+              </div>
+              <div class="w-full bg-slate-950 h-3 rounded-full overflow-hidden border border-slate-800">
+                <div class="bg-slate-700 h-full rounded-full" style="width: 94.4%"></div>
+              </div>
+            </div>
+            <!-- Progress Bar 3: VISA -->
+            <div class="space-y-1">
+              <div class="flex justify-between text-xs">
+                <span class="text-slate-300 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-500"></span> VISA 結算體系</span>
+                <span class="text-slate-400 font-mono">1.2 兆美元 (16.6%)</span>
+              </div>
+              <div class="w-full bg-slate-950 h-3 rounded-full overflow-hidden border border-slate-800">
+                <div class="bg-blue-600 h-full rounded-full" style="width: 16.6%"></div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mt-4 p-3 bg-slate-950/60 rounded-xl border border-slate-800 text-[11px] text-slate-400 leading-relaxed">
+            <strong>真實應用場景才是基底：</strong>「儘管市場處於冰凍熊市，穩定幣數據的上升反應了其作為無國界、不依賴銀行、不分週末的底層結算優勢正在高速蠶食傳統法幣份額。」— 腦哥 Podcast 週報。
+          </div>
+        </div>
+
+      </section>
+
+
+      <!-- TAB 2: SIMULATOR & PLAYGROUND -->
+      <section id="tab-simulator" class="hidden space-y-8">
+        
+        <!-- Tab Welcome Banner -->
+        <div class="bg-gradient-to-r from-slate-900 via-emerald-950/20 to-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl">
+          <span class="text-accent-400 text-xs font-semibold uppercase tracking-widest">沙盤模擬第二站</span>
+          <h2 class="text-2xl font-bold mt-1 text-white">Dyson Finance 雙幣與黑洞 AMM 模擬</h2>
+          <p class="text-sm text-slate-400 mt-2 leading-relaxed">
+            台灣天才少年陳品一週反超 Curve、創下一億美金日流水的神話。在此親自操盤「負儲備機制」並模擬「雙幣選擇權理財」收益模型。
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+          
+          <!-- Box 1: 黑洞 Swap (負儲備脫鉤防衛戰) -->
+          <div class="bg-slate-900 rounded-2xl border border-slate-800 p-6 shadow-xl space-y-6 flex flex-col justify-between">
+            <div>
+              <span class="text-brand-400 text-xs font-bold tracking-wider uppercase">Black Hole Swap Mechanics</span>
+              <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                <i data-lucide="disc" class="w-5 h-5 text-brand-400 animate-spin"></i> 黑洞 Swap 負儲備機制演示
+              </h3>
+              <p class="text-xs text-slate-400 mt-1">
+                傳統 AMM 在單邊大額脫鉤時會被迅速吸乾。黑洞 Swap 採用全新賽局思維：透過「負儲備」從 Compound/Aave 借出意價資產繼續提供流動性。
+              </p>
+            </div>
+
+            <!-- Simulation Controls -->
+            <div class="bg-slate-950 rounded-xl border border-slate-800 p-4 space-y-4">
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-slate-300 font-medium">1. 設定脫鉤情境 (DAI 對比 USDC 產生溢價)</span>
+                <span id="depeg-val" class="text-brand-400 font-bold font-mono">1.07 USD</span>
+              </div>
+              <!-- Depeg Slider -->
+              <input type="range" id="depeg-ratio" min="1.00" max="1.15" step="0.01" value="1.07" oninput="updateDepegSwapSimulation()" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-brand-500">
+              
+              <div class="grid grid-cols-2 gap-3 text-center text-xs">
+                <div class="p-2 bg-slate-900 rounded-lg">
+                  <span class="text-slate-400 block text-[10px]">一般 AMM (如 Curve)</span>
+                  <span id="amm-status" class="text-rose-400 font-semibold block mt-1">池子被買空 / 當機</span>
+                </div>
+                <div class="p-2 bg-brand-500/10 border border-brand-500/20 rounded-lg">
+                  <span class="text-slate-300 block text-[10px]">黑洞 Swap 狀態</span>
+                  <span id="blackhole-status" class="text-accent-400 font-bold block mt-1">負儲備開啟 / 獲利 7%</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <span class="text-xs font-semibold text-slate-400 uppercase">黑洞負儲備流程動態追蹤：</span>
+              <div class="text-[11px] text-slate-400 space-y-1.5 leading-relaxed bg-slate-950 p-3 rounded-xl border border-slate-800">
+                <div class="flex items-center gap-2">
+                  <span class="w-4 h-4 rounded bg-slate-800 text-slate-400 flex items-center justify-center font-mono">1</span>
+                  <span>大眾爆買 DAI 溢價，黑洞池內的實體 DAI 被迅速清空。</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="w-4 h-4 rounded bg-slate-800 text-slate-400 flex items-center justify-center font-mono">2</span>
+                  <span class="text-brand-400">系統將滯留的 USDC 抵押至 Aave/Compound 借出虛擬 DAI 賣給用戶。</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="w-4 h-4 rounded bg-slate-800 text-slate-400 flex items-center justify-center font-mono">3</span>
+                  <span class="text-accent-400">當場套現套利 (溢價部分直接歸入協議儲備)，創造「無限流動性神話」。</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-2 text-center">
+              <button onclick="triggerDepegDemo()" class="w-full bg-brand-600 hover:bg-brand-500 text-white font-bold py-2.5 px-4 rounded-xl transition text-sm flex items-center justify-center gap-2">
+                <i data-lucide="play" class="w-4 h-4"></i> 瞬間溢價測試 (100M 美金爆量重現)
+              </button>
+            </div>
+          </div>
+
+          <!-- Box 2: 雙幣理財 Payoff 曲線模擬器 -->
+          <div class="bg-slate-900 rounded-2xl border border-slate-800 p-6 shadow-xl space-y-6 flex flex-col justify-between">
+            <div>
+              <span class="text-accent-400 text-xs font-bold tracking-wider uppercase">Dual-Currency Yield Engine</span>
+              <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                <i data-lucide="trending-up" class="w-5 h-5 text-accent-400"></i> 雙幣理財 payoff 曲線模擬器
+              </h3>
+              <p class="text-xs text-slate-400 mt-1">
+                陳品指出：AMM 理財是一場「賣方選擇權」賽局。用戶賭「低波動」，協議吸納虧損並回補高額年化 (APR)。在此設定投資，查看期末損益！
+              </p>
+            </div>
+
+            <!-- Parameters Panel -->
+            <div class="bg-slate-950 rounded-xl border border-slate-800 p-4 space-y-4">
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-[11px] text-slate-400 mb-1">投資本金 (USD)</label>
+                  <input type="number" id="dual-principal" value="4000" oninput="updatePayoffChart()" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 font-mono text-sm text-slate-200 focus:outline-none focus:border-brand-500">
+                </div>
+                <div>
+                  <label class="block text-[11px] text-slate-400 mb-1">保證月收益率 (Premium %)</label>
+                  <input type="number" id="dual-apr" value="10" oninput="updatePayoffChart()" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 font-mono text-sm text-slate-200 focus:outline-none focus:border-brand-500">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-[11px] text-slate-400 mb-1">雙幣約定價格 (ETH Strike Price - 現存 $3,000)</label>
+                <input type="range" id="dual-strike" min="2000" max="4000" step="100" value="3000" oninput="updatePayoffChart()" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-accent-500">
+                <div class="flex justify-between text-[10px] text-slate-500 mt-1 font-mono">
+                  <span>Strike: $2,000</span>
+                  <span id="dual-strike-val" class="text-accent-400 font-bold">$3,000</span>
+                  <span>Strike: $4,000</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- SVG Payoff Chart Wrapper -->
+            <div class="p-4 bg-slate-950 rounded-xl border border-slate-800">
+              <canvas id="payoffChart" class="w-full h-48"></canvas>
+            </div>
+
+            <!-- Explanation Text -->
+            <p class="text-[11px] text-slate-400 leading-normal" id="payoff-explanation">
+              <strong>收益結構解讀：</strong>當到期日 ETH 低於 $3,000 時，本金將被強行轉換為 ETH，本幣價值產生線性浮虧，但「10% 保證權利金」保證您比純持幣好。
+            </p>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- TAB 3: PODCAST KNOWLEDGE BASE -->
+      <section id="tab-knowledge" class="hidden space-y-8">
+        
+        <!-- Tab Welcome Banner -->
+        <div class="bg-gradient-to-r from-slate-900 via-slate-950 to-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl flex justify-between items-center flex-wrap gap-4">
+          <div>
+            <span class="text-brand-400 text-xs font-semibold uppercase tracking-widest">沙盤模擬第三站</span>
+            <h2 class="text-2xl font-bold mt-1 text-white">腦哥 Chill 塊鏈核心知識庫</h2>
+            <p class="text-sm text-slate-400 mt-2">
+              深度拆解 NotebookLM 文件中，從台灣少年陳品傳奇至全球宏觀金融超車的歷史對白與真實數據。
+            </p>
+          </div>
+          
+          <!-- Interactive Search Filter -->
+          <div class="relative w-full sm:w-64">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
+              <i data-lucide="search" class="w-4 h-4"></i>
+            </span>
+            <input type="text" id="knowledge-search" oninput="filterKnowledge()" placeholder="搜尋關鍵字（例如：陳品、TGA）..." class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-4 py-2 text-xs focus:outline-none focus:border-brand-500 text-slate-200">
+          </div>
+        </div>
+
+        <!-- Filter Tags -->
+        <div class="flex flex-wrap gap-2">
+          <button onclick="setKnowledgeFilter('all')" class="filter-tag px-3.5 py-1.5 rounded-full text-xs font-semibold bg-brand-500 text-white border border-brand-500/20 transition">
+            全部內容
+          </button>
+          <button onclick="setKnowledgeFilter('chenpin')" class="filter-tag px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-900 text-slate-400 border border-slate-800 hover:border-slate-700 hover:text-slate-200 transition">
+            陳品專訪與 AMM 革命
+          </button>
+          <button onclick="setKnowledgeFilter('macro')" class="filter-tag px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-900 text-slate-400 border border-slate-800 hover:border-slate-700 hover:text-slate-200 transition">
+            宏觀金融超車與戰略
+          </button>
+          <button onclick="setKnowledgeFilter('security')" class="filter-tag px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-900 text-slate-400 border border-slate-800 hover:border-slate-700 hover:text-slate-200 transition">
+            網路安全與量子威脅
+          </button>
+        </div>
+
+        <!-- Grid of Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="knowledge-grid">
+          
+          <!-- Card 1 -->
+          <div class="knowledge-card bg-slate-900 rounded-2xl border border-slate-800 p-5 space-y-3 shadow-md hover:border-brand-500/30 transition flex flex-col justify-between" data-category="chenpin">
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-0.5 rounded text-[10px] font-bold bg-brand-500/10 text-brand-400 border border-brand-500/20">陳品專訪</span>
+                <span class="text-xs text-slate-500">Podcast 第1集</span>
+              </div>
+              <h4 class="text-base font-bold text-white mt-2">N+1 教學理論與白皮書包裝</h4>
+              <p class="text-xs text-slate-400 leading-relaxed mt-2">
+                陳品分享：白皮書要寫得讓「大一理工男」既看得懂（微積分物理知識）、又無法完全看懂，藉此喚起對方心中殘留的原廠高傲感，進而願意研究並產生崇拜。
+              </p>
+              <div class="p-2.5 bg-slate-950 rounded-lg border border-slate-800/80 text-[11px] text-slate-400 italic mt-3">
+                「如果學生會 N 個東西，你要教他 N+1。你不能教他會的，也不能教他完全不會的，這就是對大腦的 Hack。」
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="knowledge-card bg-slate-900 rounded-2xl border border-slate-800 p-5 space-y-3 shadow-md hover:border-brand-500/30 transition flex flex-col justify-between" data-category="chenpin">
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-0.5 rounded text-[10px] font-bold bg-brand-500/10 text-brand-400 border border-brand-500/20">陳品專訪</span>
+                <span class="text-xs text-slate-500">Dyson Finance</span>
+              </div>
+              <h4 class="text-base font-bold text-white mt-2">散戶造市商的悲歌與解方</h4>
+              <p class="text-xs text-slate-400 leading-relaxed mt-2">
+                Uniswap V3 讓主動造市商（專業量化）迅速吃掉絕大部交易手續費，散戶被動承受「無償損失 (IL)」與套利虧損。Dyson 協議決定主動吸納這部分不確定性，將散戶包裝為穩拿權利金的期權賣方。
+              </p>
+              <div class="p-2.5 bg-slate-950 rounded-lg border border-slate-800/80 text-[11px] text-slate-400 italic mt-3">
+                「僵硬的策略必然會把錢輸給外面的套利機器人。Dyson 要解的就是 LP 的體驗不佳問題。」
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="knowledge-card bg-slate-900 rounded-2xl border border-slate-800 p-5 space-y-3 shadow-md hover:border-brand-500/30 transition flex flex-col justify-between" data-category="macro">
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">宏觀戰略</span>
+                <span class="text-xs text-slate-500">外匯存底專案</span>
+              </div>
+              <h4 class="text-base font-bold text-white mt-2">為何儲備「美債」並非絕對無風險？</h4>
+              <p class="text-xs text-slate-400 leading-relaxed mt-2">
+                週報指出：目前美債的每年利息支出已超越美國國防支出。隨 2030 年戰後嬰兒潮全面退休，政府社福與債務爆發，美債貶值及信用風險激增，多元化配置至物理儲備（如比特幣）迫在眉睫。
+              </p>
+              <div class="p-2.5 bg-slate-950 rounded-lg border border-slate-800/80 text-[11px] text-slate-400 italic mt-3">
+                「將 80% 的外匯全部壓在單一國家的美債上，極大化削弱了多元分散與防禦性風險機制。」
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="knowledge-card bg-slate-900 rounded-2xl border border-slate-800 p-5 space-y-3 shadow-md hover:border-brand-500/30 transition flex flex-col justify-between" data-category="macro">
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">宏觀戰略</span>
+                <span class="text-xs text-slate-500">美聯儲 TGA 帳戶</span>
+              </div>
+              <h4 class="text-base font-bold text-white mt-2">TGA 帳戶「吸血效應」與 2019 年 Repo 危機</h4>
+              <p class="text-xs text-slate-400 leading-relaxed mt-2">
+                當美政府短暫關門時，稅收與國債資金流入財政部一般帳戶 (TGA) 卻無法支出，導致 TGA 從 8000 億激增至 1 兆。這相當於把市場流動性抽乾，重演 2019 年隔夜貸款利率飆升的「Repo 錢荒」。
+              </p>
+              <div class="p-2.5 bg-slate-950 rounded-lg border border-slate-800/80 text-[11px] text-slate-400 italic mt-3">
+                「市場靜止甚至不漲，反而才是長期健康發展、避免短暫過熱泡沫重回極端熊市的利多。」
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 5 -->
+          <div class="knowledge-card bg-slate-900 rounded-2xl border border-slate-800 p-5 space-y-3 shadow-md hover:border-brand-500/30 transition flex flex-col justify-between" data-category="security">
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-0.5 rounded text-[10px] font-bold bg-red-500/10 text-red-400 border border-red-500/20">網路安全</span>
+                <span class="text-xs text-slate-500">Google 研究報告</span>
+              </div>
+              <h4 class="text-base font-bold text-white mt-2">量子電腦對 ECDSA 比特幣密鑰防線的真實威脅</h4>
+              <p class="text-xs text-slate-400 leading-relaxed mt-2">
+                Google 科學論文將破解 ECDSA 橢圓曲線演算法所需的量子位元下調至約一萬顆。在實驗模擬中，超快速時脈的量子電腦最快可在 9 分鐘內由公鑰推算私鑰，並將臨界預測點提前至 2029 年。
+              </p>
+              <div class="p-2.5 bg-slate-950 rounded-lg border border-slate-800/80 text-[11px] text-slate-400 italic mt-3">
+                「這不是會不會發生的問題，而是量子防禦和量子攻擊的速度賽跑。比特幣需要提前進行後量子遷移。」
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 6 -->
+          <div class="knowledge-card bg-slate-900 rounded-2xl border border-slate-800 p-5 space-y-3 shadow-md hover:border-brand-500/30 transition flex flex-col justify-between" data-category="security">
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-0.5 rounded text-[10px] font-bold bg-red-500/10 text-red-400 border border-red-500/20">網路安全</span>
+                <span class="text-xs text-slate-500">Drift Protocol</span>
+              </div>
+              <h4 class="text-base font-bold text-white mt-2">社會工程學 (Social Engineering) 才是最大漏洞</h4>
+              <p class="text-xs text-slate-400 leading-relaxed mt-2">
+                Solana 的 DEX 龍頭 Drift 爆出損失 2.8 億美金，經查並非智能合約漏洞，而是管理員遭受社會工程學騙局洩露了多簽私鑰。散戶往往過於擔心底層程式碼不安全，卻忽視了人性本身的脆弱。
+              </p>
+              <div class="p-2.5 bg-slate-950 rounded-lg border border-slate-800/80 text-[11px] text-slate-400 italic mt-3">
+                「駭客偷走資金最常利用的不是演算法缺陷，而是趁你神智不清、或者在釣魚網頁上不自覺填入助記詞。」
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- TAB 4: WEB3 GAME THEORY QUIZ -->
+      <section id="tab-quiz" class="hidden space-y-8">
+        
+        <!-- Tab Welcome Banner -->
+        <div class="bg-gradient-to-r from-slate-900 via-brand-950/20 to-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl">
+          <span class="text-brand-400 text-xs font-semibold uppercase tracking-widest">沙盤模擬第四站</span>
+          <h2 class="text-2xl font-bold mt-1 text-white">您的 Web3 投資賽局與心態特質檢測</h2>
+          <p class="text-sm text-slate-400 mt-2">
+            回答 4 個基於 Podcast 場景設計的擬真賽局決策，精準診斷您屬於哪一種 Web3 關鍵角色！
+          </p>
+        </div>
+
+        <!-- Quiz Container -->
+        <div class="bg-slate-900 rounded-2xl border border-slate-800 p-6 shadow-xl space-y-8" id="quiz-container">
+          
+          <!-- Question 1 -->
+          <div class="quiz-question space-y-4" id="q1">
+            <div class="flex items-center space-x-2">
+              <span class="w-6 h-6 rounded-full bg-brand-500 text-white flex items-center justify-center text-xs font-bold font-mono">1</span>
+              <h3 class="text-base font-bold text-slate-100">當您看到全網各大穩定幣（DAI/USDC）突發 5% - 7% 的重大負溢價時，您直覺的動作是？</h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pl-8">
+              <button onclick="answerQuestion(1, 'A')" class="p-3 text-left rounded-xl border border-slate-800 hover:border-brand-500 bg-slate-950/60 hover:bg-slate-950 text-xs leading-normal text-slate-300 transition">
+                <strong class="text-brand-400">A. 極度恐慌：</strong>這一定又是像 Terra/FTX 一樣暴雷的初期！立刻清空所有資產，並在社群提醒大家不要在鏈上玩了。
+              </button>
+              <button onclick="answerQuestion(1, 'B')" class="p-3 text-left rounded-xl border border-slate-800 hover:border-brand-500 bg-slate-950/60 hover:bg-slate-950 text-xs leading-normal text-slate-300 transition">
+                <strong class="text-brand-400">B. 理性套利：</strong>只要它還是以太坊上的智能合約，我就能用極低成本解決信任。立刻去 Aave/Compound 反向抵押與對敲造市！
+              </button>
+            </div>
+          </div>
+
+          <!-- Question 2 -->
+          <div class="quiz-question space-y-4 hidden" id="q2">
+            <div class="flex items-center space-x-2">
+              <span class="w-6 h-6 rounded-full bg-brand-500 text-white flex items-center justify-center text-xs font-bold font-mono">2</span>
+              <h3 class="text-base font-bold text-slate-100">您在評估一個新項目的白皮書時，最吸引您的元素通常是？</h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pl-8">
+              <button onclick="answerQuestion(2, 'A')" class="p-3 text-left rounded-xl border border-slate-800 hover:border-brand-500 bg-slate-950/60 hover:bg-slate-950 text-xs leading-normal text-slate-300 transition">
+                <strong class="text-brand-400">A. 極簡通俗：</strong>就像食物迷因風，簡單明瞭地告訴我番薯可以挖多少％、什麼時候可以財富自由。
+              </button>
+              <button onclick="answerQuestion(2, 'B')" class="p-3 text-left rounded-xl border border-slate-800 hover:border-brand-500 bg-slate-950/60 hover:bg-slate-950 text-xs leading-normal text-slate-300 transition">
+                <strong class="text-brand-400">B. N+1 理論包裝：</strong>充滿了微積分與對稱算式，讓我看得懂一點、卻又沒辦法完全看透，讓我驚嘆對方簡直是天才。
+              </button>
+            </div>
+          </div>
+
+          <!-- Question 3 -->
+          <div class="quiz-question space-y-4 hidden" id="q3">
+            <div class="flex items-center space-x-2">
+              <span class="w-6 h-6 rounded-full bg-brand-500 text-white flex items-center justify-center text-xs font-bold font-mono">3</span>
+              <h3 class="text-base font-bold text-slate-100">美政府再度關門，且 TGA 餘額迅速突破一兆，市場因流動性缺乏開始回測 20%，此時您的策略是？</h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pl-8">
+              <button onclick="answerQuestion(3, 'A')" class="p-3 text-left rounded-xl border border-slate-800 hover:border-brand-500 bg-slate-950/60 hover:bg-slate-950 text-xs leading-normal text-slate-300 transition">
+                <strong class="text-brand-400">A. 極力出逃：</strong>巴菲特都留著 3800 億美金一分錢不投，現金為王！立刻停損並等待大盤暴跌到 30,000 美金。
+              </button>
+              <button onclick="answerQuestion(3, 'B')" class="p-3 text-left rounded-xl border border-slate-800 hover:border-brand-500 bg-slate-950/60 hover:bg-slate-950 text-xs leading-normal text-slate-300 transition">
+                <strong class="text-brand-400">B. 梯度金字塔建倉：</strong>這是正常的 TGA 短期吸血與 Repo 錢荒效應。按照計畫在 $55,000 左右重錘建倉 50% 主力底。
+              </button>
+            </div>
+          </div>
+
+          <!-- Question 4 -->
+          <div class="quiz-question space-y-4 hidden" id="q4">
+            <div class="flex items-center space-x-2">
+              <span class="w-6 h-6 rounded-full bg-brand-500 text-white flex items-center justify-center text-xs font-bold font-mono">4</span>
+              <h3 class="text-base font-bold text-slate-100">關於 2029 年 Google 即將來臨的「量子密鑰破解危機」，您抱持何種戰略態度？</h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pl-8">
+              <button onclick="answerQuestion(4, 'A')" class="p-3 text-left rounded-xl border border-slate-800 hover:border-brand-500 bg-slate-950/60 hover:bg-slate-950 text-xs leading-normal text-slate-300 transition">
+                <strong class="text-brand-400">A. 順其自然：</strong>2029 還很久，而且如果真的破解了，全網共識應該會直接凍結中本聰的錢包。
+              </button>
+              <button onclick="answerQuestion(4, 'B')" class="p-3 text-left rounded-xl border border-slate-800 hover:border-brand-500 bg-slate-950/60 hover:bg-slate-950 text-xs leading-normal text-slate-300 transition">
+                <strong class="text-brand-400">B. 防守第一：</strong>拒絕任何多簽私鑰託管在中心化容易遭受「社會工程」漏洞的架構，且支持比特幣提前實施後量子加密遷移。
+              </button>
+            </div>
+          </div>
+
+          <!-- Result Card -->
+          <div class="quiz-result hidden text-center space-y-4 p-8 bg-slate-950/80 rounded-2xl border border-slate-800" id="quiz-result">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-brand-500/10 text-brand-400 border border-brand-500/20 mb-2">
+              <i data-lucide="award" class="w-8 h-8"></i>
+            </div>
+            <h3 class="text-xl font-extrabold text-white" id="result-title">測驗結果載入中...</h3>
+            <p class="text-xs text-slate-400 max-w-xl mx-auto leading-relaxed" id="result-description">
+              特質描述
+            </p>
+            <div class="pt-4">
+              <button onclick="resetQuiz()" class="text-xs bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 px-4 py-2 rounded-xl transition">
+                重新測驗
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Footer Section -->
+  <footer class="border-t border-slate-900 bg-slate-950 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-2">
+      <p class="text-xs text-slate-500">
+        © 2026 腦哥 Chill 塊鏈 Podcast 粉絲互動沙盤。本網站僅作 Web3 賽局與技術機制演示，不構成任何投資建議。
+      </p>
+      <p class="text-[10px] text-slate-600">
+        Powered by Gemini 2.5 Flash Tech Simulator (Taiwan Community Version)
+      </p>
+    </div>
+  </footer>
+
+  <!-- Script logic handles tabs, state change, and visualizations -->
+  <script>
+    // Global Tab Manager
+    function switchTab(tabName) {
+      const tabs = ['dashboard', 'simulator', 'knowledge', 'quiz'];
+      tabs.forEach(tab => {
+        document.getElementById(`tab-${tab}`).classList.add('hidden');
+        document.getElementById(`btn-${tab}`).className = "tab-btn w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition text-left shrink-0 lg:shrink text-slate-400 hover:bg-slate-900/50 hover:text-slate-200";
+      });
+
+      document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+      document.getElementById(`btn-${tabName}`).className = "tab-btn w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition text-left shrink-0 lg:shrink bg-brand-600 text-white shadow-lg shadow-brand-600/15";
+      
+      // Auto-trigger chart render if switched to simulator
+      if (tabName === 'simulator') {
+        setTimeout(initPayoffChart, 100);
+      }
+    }
+
+    // Dynamic Toast Manager
+    function showToast(title, msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-title').innerText = title;
+      document.getElementById('toast-message').innerText = msg;
+      toast.classList.remove('hidden');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 4000);
+    }
+
+    // 1. 五維底部預測儀邏輯
+    function calculateCustomBottom() {
+      const wMacro = parseFloat(document.getElementById('weight-macro').value);
+      const wMiner = parseFloat(document.getElementById('weight-miner').value);
+      const wOnchain = parseFloat(document.getElementById('weight-onchain').value);
+      const wTa = parseFloat(document.getElementById('weight-ta').value);
+      const wSentiment = parseFloat(document.getElementById('weight-sentiment').value);
+
+      document.getElementById('weight-macro-val').innerText = wMacro + "%";
+      document.getElementById('weight-miner-val').innerText = wMiner + "%";
+      document.getElementById('weight-onchain-val').innerText = wOnchain + "%";
+      document.getElementById('weight-ta-val').innerText = wTa + "%";
+      document.getElementById('weight-sentiment-val').innerText = wSentiment + "%";
+
+      // Fixed Reference Value Bottoms from Podcast
+      const valMacro = 40000;
+      const valMiner = 55000;
+      const valOnchain = 55207;
+      const valTa = 55000;
+      const valSentiment = 62500;
+
+      const sumWeights = wMacro + wMiner + wOnchain + wTa + wSentiment;
+      if (sumWeights === 0) {
+        document.getElementById('custom-bottom-price').innerText = "$0 USD";
+        return;
+      }
+
+      const weightedAverage = (
+        (valMacro * wMacro) +
+        (valMiner * wMiner) +
+        (valOnchain * wOnchain) +
+        (valTa * wTa) +
+        (valSentiment * wSentiment)
+      ) / sumWeights;
+
+      const roundedPrice = Math.round(weightedAverage);
+      document.getElementById('custom-bottom-price').innerHTML = `$${roundedPrice.toLocaleString()} <span class="text-sm font-semibold text-slate-400">USD</span>`;
+
+      // Update customized warning/advice based on computed price
+      let advice = "";
+      if (roundedPrice < 48000) {
+        advice = "您預測了大崩盤或黑天鵝系統危機。金字塔戰術中應備留 40% 的高流動性防守子彈。";
+      } else if (roundedPrice < 56000) {
+        advice = "當前預估剛好處於 200 週移動平均線與全網實現價格的核心價值底，屬於極佳的主力重倉點！";
+      } else {
+        advice = "您認為市場情緒底與散戶極度恐慌期已是最低，右側交易趨勢即將確立。推薦使用定期定額緩慢進場。";
+      }
+      document.getElementById('custom-bottom-advice').innerText = advice;
+    }
+
+    // 2. 台灣外匯戰略儲備模擬邏輯
+    function calculateReserveImpact() {
+      const percent = parseFloat(document.getElementById('reserve-percent').value);
+      document.getElementById('reserve-percent-val').innerText = percent.toFixed(1) + " %";
+
+      const totalReserveUSD = 560000000000; // 560 Billion
+      const btcRefPrice = 60000; // podcast reference rate
+
+      const allocatedUSD = totalReserveUSD * (percent / 100);
+      const allocatedBTC = allocatedUSD / btcRefPrice;
+
+      document.getElementById('reserve-allocated-usd').innerHTML = `$${(allocatedUSD / 1000000000).toFixed(2)} B <span class="text-xs text-slate-400">USD</span>`;
+      document.getElementById('reserve-allocated-btc').innerHTML = `${Math.round(allocatedBTC).toLocaleString()} <span class="text-xs text-slate-400">BTC</span>`;
+
+      // Ranking logic based on percentage
+      let rankText = "";
+      if (percent === 0) {
+        rankText = "台灣目前沒有規劃比特幣與美元穩定幣戰略配置。央行目前持幣為零，承擔較重的美債通膨貶值風險。";
+      } else if (percent < 1.5) {
+        rankText = `若撥出 ${percent}%，購入約 ${Math.round(allocatedBTC).toLocaleString()} 顆 BTC，台灣將立即空降成為全球主權國家持有前三名，具備強大戰略海域被封鎖時的資產可攜性。`;
+      } else if (percent < 3.5) {
+        rankText = `配置達 ${(percent).toFixed(1)}%，累計持有 ${Math.round(allocatedBTC).toLocaleString()} 顆 BTC！台灣在全球數位黃金時代將佔據絕對制高點，外匯抗通膨能力提升 25%。`;
+      } else {
+        rankText = `重錘配置 ${(percent).toFixed(1)}%！這將完全對沖台灣的美債單一失敗點。主權持有國直接超越美國聯邦政府現有沒收資產規模！`;
+      }
+      document.getElementById('reserve-rank-text').innerText = rankText;
+    }
+
+    // 3. 黑洞 Swap 負儲備演示
+    function updateDepegSwapSimulation() {
+      const depegVal = parseFloat(document.getElementById('depeg-ratio').value);
+      document.getElementById('depeg-val').innerText = depegVal.toFixed(2) + " USD";
+
+      const ammStatus = document.getElementById('amm-status');
+      const blackholeStatus = document.getElementById('blackhole-status');
+
+      if (depegVal <= 1.02) {
+        ammStatus.innerText = "平穩運行";
+        ammStatus.className = "text-emerald-400 font-semibold block mt-1";
+        blackholeStatus.innerText = "正常監控 / 零負債";
+        blackholeStatus.className = "text-slate-400 font-semibold block mt-1";
+      } else if (depegVal <= 1.07) {
+        ammStatus.innerText = "流動性告急 / 準備掏空";
+        ammStatus.className = "text-amber-400 font-semibold block mt-1";
+        blackholeStatus.innerText = "開啟借貸儲備 / 獲利 ~5%";
+        blackholeStatus.className = "text-accent-400 font-bold block mt-1";
+      } else {
+        ammStatus.innerText = "池子枯竭 / 完全當機";
+        ammStatus.className = "text-rose-400 font-semibold block mt-1";
+        blackholeStatus.innerText = `負儲備開滿 / 套現 ~${Math.round((depegVal - 1) * 100)}% 溢價`;
+        blackholeStatus.className = "text-accent-400 font-extrabold block mt-1";
+      }
+    }
+
+    function triggerDepegDemo() {
+      // simulate sudden depeg spike
+      let val = 1.00;
+      const interval = setInterval(() => {
+        val += 0.01;
+        if (val >= 1.12) {
+          clearInterval(interval);
+          showToast("神話重現", "一週反超 Curve 創一億日流水事件成功模擬！負儲備機制順利運行，協議捕獲溢價。");
+        }
+        document.getElementById('depeg-ratio').value = val.toFixed(2);
+        updateDepegSwapSimulation();
+      }, 100);
+    }
+
+    // 4. 雙幣期權 Payoff 曲線繪製 (Chart.js)
+    let payoffChartInstance = null;
+    function initPayoffChart() {
+      const ctx = document.getElementById('payoffChart').getContext('2d');
+      if (payoffChartInstance) {
+        payoffChartInstance.destroy();
+      }
+
+      const principal = parseFloat(document.getElementById('dual-principal').value) || 4000;
+      const premiumPercent = parseFloat(document.getElementById('dual-apr').value) || 10;
+      const strike = parseFloat(document.getElementById('dual-strike').value) || 3000;
+
+      // Generate data points for EXPIRING PRICE on X-axis (e.g., from 1500 to 4500)
+      const labels = [];
+      const dataPayoff = [];
+      const dataHold = [];
+
+      for (let price = 1500; price <= 4500; price += 250) {
+        labels.push("$" + price);
+        
+        // 1. Holding 100% Cash / Principal Benchmark line
+        dataHold.push(principal);
+
+        // 2. Dual Currency Payoff calculation
+        // Expiring yield = Premium guaranteed anyway
+        const guaranteedPremiumVal = principal * (premiumPercent / 100);
+        let currentWorth = 0;
+
+        if (price <= strike) {
+          // strong-converted to ETH at strike price
+          const ethAcquired = principal / strike;
+          currentWorth = (ethAcquired * price) + guaranteedPremiumVal;
+        } else {
+          // kept as USD + premium
+          currentWorth = principal + guaranteedPremiumVal;
+        }
+        dataPayoff.push(currentWorth);
+      }
+
+      payoffChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Dyson 雙幣理財期末總值',
+              data: dataPayoff,
+              borderColor: '#10b981',
+              backgroundColor: 'rgba(16, 185, 129, 0.1)',
+              fill: true,
+              tension: 0.3,
+              borderWidth: 3
+            },
+            {
+              label: '持幣/持法幣基準線',
+              data: dataHold,
+              borderColor: '#475569',
+              borderDash: [5, 5],
+              fill: false,
+              tension: 0,
+              borderWidth: 1.5
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              labels: {
+                color: '#94a3b8',
+                font: { size: 10 }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(51, 65, 85, 0.2)' },
+              ticks: { color: '#94a3b8', font: { size: 9 } }
+            },
+            y: {
+              grid: { color: 'rgba(51, 65, 85, 0.2)' },
+              ticks: { color: '#94a3b8', font: { size: 9 } }
+            }
+          }
+        }
+      });
+    }
+
+    function updatePayoffChart() {
+      const strikeVal = document.getElementById('dual-strike').value;
+      document.getElementById('dual-strike-val').innerText = "$" + strikeVal;
+      initPayoffChart();
+    }
+
+    // 5. 知識庫搜尋與篩選
+    let activeCategory = 'all';
+    function setKnowledgeFilter(category) {
+      activeCategory = category;
+      // Update Tag Styles
+      const tags = document.querySelectorAll('.filter-tag');
+      tags.forEach(tag => {
+        tag.className = "filter-tag px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-900 text-slate-400 border border-slate-800 hover:border-slate-700 hover:text-slate-200 transition";
+      });
+      // Active Style
+      event.target.className = "filter-tag px-3.5 py-1.5 rounded-full text-xs font-semibold bg-brand-500 text-white border border-brand-500/20 transition";
+      
+      filterKnowledge();
+    }
+
+    function filterKnowledge() {
+      const query = document.getElementById('knowledge-search').value.toLowerCase();
+      const cards = document.querySelectorAll('.knowledge-card');
+
+      cards.forEach(card => {
+        const cat = card.getAttribute('data-category');
+        const text = card.innerText.toLowerCase();
+
+        const matchCat = (activeCategory === 'all' || cat === activeCategory);
+        const matchQuery = text.includes(query);
+
+        if (matchCat && matchQuery) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+
+    // 6. 賽局測驗邏輯
+    const quizAnswers = {};
+    function answerQuestion(qNum, choice) {
+      quizAnswers[qNum] = choice;
+      const currentQ = document.getElementById(`q${qNum}`);
+      currentQ.classList.add('hidden');
+
+      const nextQ = document.getElementById(`q${qNum + 1}`);
+      if (nextQ) {
+        nextQ.classList.remove('hidden');
+      } else {
+        // Compute and Show Result
+        showQuizResult();
+      }
+    }
+
+    function showQuizResult() {
+      const container = document.getElementById('quiz-result');
+      const title = document.getElementById('result-title');
+      const desc = document.getElementById('result-description');
+
+      container.classList.remove('hidden');
+
+      // Simple Archetype Evaluation Logic
+      const scoreB = Object.values(quizAnswers).filter(x => x === 'B').length;
+
+      if (scoreB === 4) {
+        title.innerText = "🎉 究極 Web3 賽局大師 (Game Theory Master)";
+        desc.innerText = "您完美繼承了天才少年陳品與腦哥 Podcast 週報的宏觀賽局靈魂！您不排斥複雜協議、洞察無償損失與套利窗口，對主權外匯儲備配置及抗量子加密具備深厚專業底線。極度適合參與 Dyson Finance 或 RWA/LST 高階造市模擬。";
+      } else if (scoreB >= 2) {
+        title.innerText = "⚖️ 理性防守型 鑽石手 (Risk Hedger / Diamond Hands)";
+        desc.innerText = "您偏向理性中性的平衡思維。既理解系統流動性被 TGA 抽乾的宿命，不盲目悲觀，也能在主流資產跌破實現價時採用金字塔式 DCA 定律建倉。對黑客事件抱持高度警惕。";
+      } else {
+        title.innerText = "🛡️ 傳統金融防禦者 (Traditional Conservative)";
+        desc.innerText = "您更信奉現金為王與傳統穩健金融。在加密貨幣波動激增、或遭遇穩定幣脫鉤事件時，您偏好回歸巴菲特式的法幣高儲備，或使用極度安全的冷錢包離線託管。建議多研究雙幣期權中對沖下行波動的特殊工具。";
+      }
+    }
+
+    function resetQuiz() {
+      document.getElementById('quiz-result').classList.add('hidden');
+      document.getElementById('q1').classList.remove('hidden');
+      document.getElementById('q2').classList.add('hidden');
+      document.getElementById('q3').classList.add('hidden');
+      document.getElementById('q4').classList.add('hidden');
+    }
+
+    // Initial page loaders
+    window.onload = function() {
+      lucide.createIcons();
+      calculateCustomBottom();
+      calculateReserveImpact();
+      updateDepegSwapSimulation();
+    }
+  </script>
+</body>
+</html>
